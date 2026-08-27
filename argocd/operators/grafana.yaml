@@ -20,6 +20,8 @@ spec:
           - $values/envs/iks/nonprod/grafana/values.yaml
     - repoURL: https://github.com/thomas-mattsson/interact-gateway.git
       ref: values
+    - repoURL: https://github.com/thomas-mattsson/interact-gateway.git
+      path: ./components/grafana/base
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
