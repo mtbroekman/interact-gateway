@@ -1,6 +1,7 @@
 ingress:
   enabled: true
   ingressClassName: public-iks-k8s-nginx
+  hosts: []
 
 persistence:
   storageClassName: ibmc-vpc-block-10iops-tier
