@@ -1,7 +1,12 @@
 ingress:
   enabled: true
   ingressClassName: public-iks-k8s-nginx
-  hosts: []
+  hosts:
+    - grafana.idig-install-cluster-e7d3d93b8b317d269525bf063b24f98d-0000.eu-de.containers.appdomain.cloud
+  tls:
+    - secretName: grafana-tls-secret
+      hosts:
+        - grafana.idig-install-cluster-e7d3d93b8b317d269525bf063b24f98d-0000.eu-de.containers.appdomain.cloud
 
 persistence:
   storageClassName: ibmc-vpc-block-10iops-tier

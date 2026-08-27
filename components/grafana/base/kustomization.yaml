@@ -4,3 +4,6 @@ kind: Kustomization
 resources:
   - secret/password.yaml
   - secret/external-secret.yaml
+  - tls-service-account.yaml
+  - tls-secret-store.yaml
+  - tls-external-secret.yaml

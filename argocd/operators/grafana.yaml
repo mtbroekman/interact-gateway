@@ -19,7 +19,7 @@ spec:
           - $values/components/grafana/base/values.yaml
           - $values/envs/iks/nonprod/grafana/values.yaml
     - ref: values
-    - path: ./components/grafana/base
+    - path: ./envs/iks/nonprod/grafana
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
