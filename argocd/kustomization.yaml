@@ -32,6 +32,21 @@ patches:
       path: /spec/source/targetRevision
 - target:
     group: argoproj.io
+    kind: Application
+    name: grafana
+  patch: |-
+    - op: replace
+      path: /spec/sources/1/repoURL
+      value: https://github.com/thomas-mattsson/interact-gateway.git
+    - op: add
+      path: /spec/sources/1/targetRevision
+    - op: replace
+      path: /spec/sources/2/repoURL
+      value: https://github.com/thomas-mattsson/interact-gateway.git
+    - op: add
+      path: /spec/sources/2/targetRevision
+- target:
+    group: argoproj.io
     kind: ApplicationSet
   patch: |-
     - op: add
