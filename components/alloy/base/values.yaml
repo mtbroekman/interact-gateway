@@ -1,0 +1,65 @@
+alloy:
+  # Alloy configuration — receives OTLP from the analytics-collector and
+  # routes each signal to the appropriate backend:
+  #   metrics → Prometheus (remote_write)
+  #   traces  → Grafana Tempo
+  #   logs    → Grafana Loki
+  configMap:
+    content: |
+      logging {
+        level  = "info"
+        format = "logfmt"
+      }
+
+      // ── OTLP receiver ────────────────────────────────────────────────────────
+      otelcol.receiver.otlp "default" {
+        grpc { endpoint = "0.0.0.0:4317" }
+        http { endpoint = "0.0.0.0:4318" }
+
+        output {
+          metrics = [otelcol.exporter.prometheus.default.input]
+          traces  = [otelcol.exporter.otlp.tempo.input]
+          logs    = [otelcol.exporter.loki.default.input]
+        }
+      }
+
+      // ── Metrics → Prometheus ─────────────────────────────────────────────────
+      otelcol.exporter.prometheus "default" {
+        forward_to = [prometheus.remote_write.default.receiver]
+      }
+
+      prometheus.remote_write "default" {
+        endpoint {
+          url = "http://prometheus-server.monitoring.svc.cluster.local/api/v1/write"
+        }
+      }
+
+      // ── Traces → Tempo ───────────────────────────────────────────────────────
+      otelcol.exporter.otlp "tempo" {
+        client {
+          endpoint = "http://tempo.monitoring.svc.cluster.local:4317"
+          tls { insecure = true }
+        }
+      }
+
+      // ── Logs → Loki ──────────────────────────────────────────────────────────
+      otelcol.exporter.loki "default" {
+        forward_to = [loki.write.default.receiver]
+      }
+
+      loki.write "default" {
+        endpoint {
+          url = "http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push"
+        }
+      }
+
+  # Expose OTLP ports on the Service so the analytics-collector can reach them
+  extraPorts:
+    - name: otlp-grpc
+      port: 4317
+      targetPort: 4317
+      protocol: TCP
+    - name: otlp-http
+      port: 4318
+      targetPort: 4318
+      protocol: TCP

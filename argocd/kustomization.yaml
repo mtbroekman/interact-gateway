@@ -15,6 +15,10 @@ resources:
   - operators/envoy-operator.yaml
   - operators/idig-operator.yaml
   - operators/grafana.yaml
+  - operators/alloy.yaml
+  - operators/prometheus.yaml
+  - operators/tempo.yaml
+  - operators/loki.yaml
 
   - operands/all-operands.yaml
  
@@ -34,6 +38,21 @@ patches:
     group: argoproj.io
     kind: Application
     name: grafana
+  patch: |-
+    - op: replace
+      path: /spec/sources/1/repoURL
+      value: https://github.com/thomas-mattsson/interact-gateway.git
+    - op: add
+      path: /spec/sources/1/targetRevision
+    - op: replace
+      path: /spec/sources/2/repoURL
+      value: https://github.com/thomas-mattsson/interact-gateway.git
+    - op: add
+      path: /spec/sources/2/targetRevision
+- target:
+    group: argoproj.io
+    kind: Application
+    name: alloy
   patch: |-
     - op: replace
       path: /spec/sources/1/repoURL

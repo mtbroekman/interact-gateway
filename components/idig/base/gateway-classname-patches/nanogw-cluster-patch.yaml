@@ -10,6 +10,14 @@ spec:
     gatewayClassName: envoy
     ingressClassName: ""
   imageRegistry: cp.icr.io/cp/apic
+  openTelemetry:
+    endpoints:
+      - url: http://alloy.monitoring.svc.cluster.local:4317
+        protocol: grpc
+        signals:
+          traces: true
+          logs: true
+          metrics: true
 #  imageRegistry: icr.io/idig
 #  template:
 #    - containers:
