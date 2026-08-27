@@ -28,7 +28,7 @@ datasources:
       - name: Tempo
         type: tempo
         uid: tempo
-        url: http://tempo.monitoring.svc.cluster.local:3200
+        url: http://tempo.monitoring.svc.cluster.local:3100
         jsonData:
           tracesToLogsV2:
             datasourceUid: loki
