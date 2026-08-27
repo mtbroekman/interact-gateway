@@ -8,3 +8,6 @@ resources:
 - gateway-classname-patches/
 
 #- max-map-count-daemonset.yaml
+
+patches:
+  - path: collector-config-patch.yaml

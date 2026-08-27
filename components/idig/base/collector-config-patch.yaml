@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: idig-nanogw-collector-config
+  namespace: idig
+data:
+  config.yaml: |
+    # receivers to collect OTLP data over Grpc and Http
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+            tls:
+              client_ca_file: /opt/ibm/collector/crypto/receiver/ca.crt
+              cert_file: /opt/ibm/collector/crypto/receiver/tls.crt
+              key_file: /opt/ibm/collector/crypto/receiver/tls.key
+          http:
+            endpoint: 0.0.0.0:4318
+            tls:
+              client_ca_file: /opt/ibm/collector/crypto/receiver/ca.crt
+              cert_file: /opt/ibm/collector/crypto/receiver/tls.crt
+              key_file: /opt/ibm/collector/crypto/receiver/tls.key
+    processors:
+      batch/apic:
+        send_batch_size: 1000
+        send_batch_max_size: 10000
+        timeout: 5s
+    exporters:
+      # exporter for analytics backend
+      apicexporter:
+        endpoint: https://ai.envoy.eu-de.containers.appdomain.cloud/x2020/v1/apievent/_bulk
+        tls:
+          ca_file:   /opt/ibm/collector/crypto/exporter/ca.crt
+          cert_file: /opt/ibm/collector/crypto/exporter/tls.crt
+          key_file:  /opt/ibm/collector/crypto/exporter/tls.key
+      # exporter for Grafana stack via Alloy
+      otlp/alloy:
+        endpoint: alloy.monitoring.svc.cluster.local:4317
+        tls:
+          insecure: true
+    service:
+      pipelines:
+        # Pipeline for analytics backend
+        traces/apic:
+          receivers: [otlp]
+          processors: [batch/apic]
+          exporters: [apicexporter]
+        # Pipelines for Grafana stack
+        traces/grafana:
+          receivers: [otlp]
+          processors: [batch/apic]
+          exporters: [otlp/alloy]
+        logs/grafana:
+          receivers: [otlp]
+          processors: [batch/apic]
+          exporters: [otlp/alloy]
+        metrics/grafana:
+          receivers: [otlp]
+          processors: [batch/apic]
+          exporters: [otlp/alloy]
+      # controls log level for this collector code
+      telemetry:
+        logs:
+          level: "error"

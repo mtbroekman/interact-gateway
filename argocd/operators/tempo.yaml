@@ -10,6 +10,12 @@ spec:
     namespace: monitoring
     server: https://kubernetes.default.svc
   project: default
+  ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/volumeClaimTemplates/0/apiVersion
+        - /spec/volumeClaimTemplates/0/kind
   source:
     repoURL: https://grafana.github.io/helm-charts
     chart: tempo
@@ -35,7 +41,6 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
-      - Replace=true
     automated:
       prune: true
       selfHeal: true
