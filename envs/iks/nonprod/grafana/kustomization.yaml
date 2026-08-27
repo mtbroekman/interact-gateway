@@ -3,9 +3,3 @@ kind: Kustomization
 
 resources:
   - ../../../../components/grafana/base
-
-patches:
-  - path: tls-secret-patch.yaml
-    target:
-      kind: ExternalSecret
-      name: grafana-tls-es
