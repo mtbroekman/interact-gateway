@@ -204,8 +204,8 @@ spec:
               value: "managed-by!=idig"
             - name: RUST_LOG
               # tma: setting trace
-              # value: dpn_operator=info
-              value: dpn_operator=trace
+              value: dpn_operator=info
+              #value: dpn_operator=trace
             - name: RUST_BACKTRACE
               value: "1"
             - name: POD_NAMESPACE
