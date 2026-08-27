@@ -28,6 +28,9 @@ spec:
             type: filesystem
         singleBinary:
           replicas: 1
+          persistence:
+            storageClass: ibmc-vpc-block-10iops-tier
+            size: 10Gi
         backend:
           replicas: 0
         read:
