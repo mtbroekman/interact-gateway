@@ -7,6 +7,10 @@ persistence:
   enabled: true
   size: 10Gi
 
+grafana.ini:
+  feature_toggles:
+    enable: lokiExploreLogsApp
+
 # Pre-configure the three datasources that Alloy feeds.
 # Alloy routes: metrics → Prometheus, traces → Tempo, logs → Loki.
 # All three run in the monitoring namespace alongside Alloy.
