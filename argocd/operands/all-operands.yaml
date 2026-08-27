@@ -53,5 +53,7 @@ spec:
         managedFieldsManagers:
         - manager
       syncPolicy:
+        syncOptions:
+          - ServerSideApply=true
         automated:
           selfHeal: true
