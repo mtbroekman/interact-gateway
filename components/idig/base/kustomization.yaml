@@ -6,8 +6,6 @@ resources:
 - idig-cluster-dev.yaml
 - ingress-issuer-v1.yaml
 - gateway-classname-patches/
+- collector-config-patch.yaml
 
 #- max-map-count-daemonset.yaml
-
-patches:
-  - path: collector-config-patch.yaml

@@ -20,6 +20,10 @@ spec:
         # Alloy pushes logs to loki.monitoring.svc.cluster.local:3100/loki/api/v1/push.
         # Grafana queries the same port.
         deploymentMode: SingleBinary
+        test:
+          enabled: false
+        lokiCanary:
+          enabled: false
         loki:
           auth_enabled: false
           commonConfig:
