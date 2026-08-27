@@ -26,6 +26,8 @@ spec:
             replication_factor: 1
           storage:
             type: filesystem
+          limits_config:
+            volume_enabled: true
         singleBinary:
           replicas: 1
           persistence:
