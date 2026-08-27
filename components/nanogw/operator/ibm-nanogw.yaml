@@ -203,7 +203,9 @@ spec:
             - name: DPN_LABEL_SELECTOR
               value: "managed-by!=idig"
             - name: RUST_LOG
-              value: dpn_operator=info
+              # tma: setting trace
+              # value: dpn_operator=info
+              value: dpn_operator=trace
             - name: RUST_BACKTRACE
               value: "1"
             - name: POD_NAMESPACE
