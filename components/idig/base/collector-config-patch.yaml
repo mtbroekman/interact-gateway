@@ -37,7 +37,7 @@ data:
           cert_file: /opt/ibm/collector/crypto/exporter/tls.crt
           key_file:  /opt/ibm/collector/crypto/exporter/tls.key
       # exporter for Grafana stack via Alloy
-      otlp/alloy:
+      otlp_grpc/alloy:
         endpoint: alloy.monitoring.svc.cluster.local:4317
         tls:
           insecure: true
@@ -52,15 +52,15 @@ data:
         traces/grafana:
           receivers: [otlp]
           processors: [batch/apic]
-          exporters: [otlp/alloy]
+          exporters: [otlp_grpc/alloy]
         logs/grafana:
           receivers: [otlp]
           processors: [batch/apic]
-          exporters: [otlp/alloy]
+          exporters: [otlp_grpc/alloy]
         metrics/grafana:
           receivers: [otlp]
           processors: [batch/apic]
-          exporters: [otlp/alloy]
+          exporters: [otlp_grpc/alloy]
       # controls log level for this collector code
       telemetry:
         logs:
