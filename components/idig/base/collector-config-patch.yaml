@@ -64,4 +64,4 @@ data:
       # controls log level for this collector code
       telemetry:
         logs:
-          level: "error"
+          level: "info"
