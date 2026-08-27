@@ -24,9 +24,8 @@ spec:
         prometheus-pushgateway:
           enabled: false
         server:
-          remoteWrite: []   # Alloy pushes to /api/v1/write — no extra config needed here
           extraArgs:
-            web.enable-remote-write-receiver: "true"
+            web.enable-remote-write-receiver: ""
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
