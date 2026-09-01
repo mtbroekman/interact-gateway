@@ -27,7 +27,7 @@ It differs from the Kubernetes (`envs/iks/`) environment in the following ways:
 | CoreDNS patch | Applied | Not applicable on OCP |
 | Valkey storage | `ibmc-vpc-block-10iops-tier` | `ocs-storagecluster-ceph-rbd` (via `components/valkey/variants/cloudprovider/odf`) |
 | Loki / Tempo storage | `ibmc-vpc-block-10iops-tier` | `ocs-storagecluster-ceph-rbd` |
-| IDIG version | 12.1.1.1 | 12.1.1.2 |
+| IDIG version | 12.1.1.2 | 12.1.1.2 |
 
 See IBM documentation for OCP-specific installation steps:
 
