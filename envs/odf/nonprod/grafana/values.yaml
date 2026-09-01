@@ -1,0 +1,12 @@
+# On OCP, Grafana is exposed via an OpenShift Route rather than a Kubernetes Ingress.
+# Set the hostname to match your cluster's apps subdomain.
+ingress:
+  enabled: false
+
+# OCP Route for Grafana — uncomment and set hostname after cluster is known
+# route:
+#   enabled: true
+#   host: grafana.apps.<cluster-name>.<base-domain>
+
+persistence:
+  storageClassName: ocs-storagecluster-ceph-rbd

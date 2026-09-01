@@ -1,33 +1,33 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+# On OpenShift, cert-manager must be installed through the OLM using the
+# "cert-manager Operator for Red Hat OpenShift" — the upstream Jetstack Helm
+# chart is not compatible with OCP.  ArgoCD applies these OLM resources so that
+# the operator is available before the cert-manager Issuer / Certificate
+# manifests in the idig operand wave are reconciled.
+---
+apiVersion: v1
+kind: Namespace
 metadata:
   name: cert-manager-operator
-  namespace: argocd
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: cert-manager-operator
+  namespace: cert-manager-operator
+spec:
+  targetNamespaces:
+    - cert-manager-operator
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: cert-manager-operator
+  namespace: cert-manager-operator
   annotations:
     argocd.argoproj.io/sync-wave: "50"
 spec:
-  destination:
-    namespace: cert-manager
-    server: https://kubernetes.default.svc
-  project: default
-  source:
-    repoURL: https://charts.jetstack.io
-    chart: cert-manager
-    targetRevision: v1.20.2
-    helm:
-      valuesObject:
-        installCRDs: true
-  ignoreDifferences:
-    - group: admissionregistration.k8s.io
-      kind: ValidatingWebhookConfiguration
-      name: cert-manager-operator-webhook
-      jsonPointers:
-        - /webhooks/0/clientConfig/caBundle
-        - /webhooks/0/namespaceSelector
-  syncPolicy:
-    syncOptions:
-      - ServerSideApply=true
-      - CreateNamespace=true
-    automated:
-      prune: true
-      selfHeal: true
+  channel: stable-v1
+  installPlanApproval: Automatic
+  name: openshift-cert-manager-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
