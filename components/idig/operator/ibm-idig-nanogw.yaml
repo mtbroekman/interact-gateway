@@ -39,7 +39,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        image: icr.io/idig/idig-gw-operator:12.1.1.0.19
+        image: icr.io/idig/idig-gw-operator:12.1.1.0.29-20260826083315
         imagePullPolicy: Always
         name: datapower-idig-operator
         resources:

@@ -58,5 +58,3 @@ spec:
   # To customize NanoGateway settings, patch the NanoGatewayCluster CR after creation
   nanoGateway:
     gatewayDomain: nanogw.envoy.eu-de.containers.appdomain.cloud
-    mgmtEndpoint:
-      gatewayClassName: envoy
