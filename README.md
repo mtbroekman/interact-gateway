@@ -29,11 +29,30 @@ It differs from the Kubernetes (`envs/iks/`) environment in the following ways:
 | Loki / Tempo storage | `ibmc-vpc-block-10iops-tier` | `ocs-storagecluster-ceph-rbd` |
 | IDIG version | 12.1.1.2 | 12.1.1.2 |
 
+### Manual post-deployment step: enable wildcard routes
+
+The NanoGateway creates a wildcard OCP Route for dynamic API routing. OCP blocks
+wildcard routes by default. After deploying the IDIG cluster, a cluster-admin must
+run this once on the cluster:
+
+```bash
+oc -n openshift-ingress-operator patch ingresscontroller/default \
+  --type=merge -p '{"spec":{"routeAdmission":{"wildcardPolicy":"WildcardsAllowed"}}}'
+```
+
+The `IngressController` pods restart automatically. This cannot be applied via
+ArgoCD as it requires cluster-admin on an OCP operator-managed resource.
+
+See: https://www.ibm.com/docs/en/dp-interact-gateway/12.1.1?topic=openshift-enabling-wildcard-routes-datapower-nanogateway
+
+---
+
 See IBM documentation for OCP-specific installation steps:
 
 - https://www.ibm.com/docs/en/dp-interact-gateway/12.1.1?topic=openshift-installing-prerequisite-components
 - https://www.ibm.com/docs/en/dp-interact-gateway/12.1.1?topic=openshift-installing-operators
 - https://www.ibm.com/docs/en/dp-interact-gateway/12.1.1?topic=openshift-deploying-idig-cluster
+- https://www.ibm.com/docs/en/dp-interact-gateway/12.1.1?topic=openshift-enabling-wildcard-routes-datapower-nanogateway
 
 For Kubernetes installation (envs/iks):
 
