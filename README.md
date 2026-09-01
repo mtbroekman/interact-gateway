@@ -15,6 +15,22 @@ https://www.ibm.com/docs/en/api-connect/software/12.1.0?topic=subsystems-install
 
 ---
 
+## Domain names / placeholders
+
+The following files contain `REPLACE_ME_*` placeholders that must be set before deployment:
+
+| Placeholder | Files | Description |
+|---|---|---|
+| `REPLACE_ME_ENDPOINT_DOMAIN` | `components/idig/base/idig-cluster-dev.yaml` | Base domain for all IDIG endpoints (e.g. `apps.mycluster.example.com` on OCP, Envoy subdomain on IKS) |
+| `REPLACE_ME_ENDPOINT_DOMAIN` | `components/idig/base/collector-config-patch.yaml` | Analytics ingestion endpoint (`ai.<domain>`) |
+| `REPLACE_ME_ENDPOINT_DOMAIN` | `components/coredns/base/coredns-custom-hosts.yaml` | CoreDNS host overrides for IKS/AKS (not used on OCP) |
+| `REPLACE_ME_ENVOY_IP` | `components/coredns/base/coredns-custom-hosts.yaml` | Envoy Gateway LoadBalancer IP (IKS/AKS only) |
+| `REPLACE_ME_CLUSTER_SUBDOMAIN` | `argocd/install-helm/values.yaml` | ArgoCD ingress hostname for IKS |
+| `REPLACE_ME_CLUSTER_SECRET` | `argocd/install-helm/values.yaml` | IKS cluster TLS secret name |
+| `REPLACE_ME_CLUSTER_SUBDOMAIN` | `argocd/install-helm/values-aks.yaml` | ArgoCD ingress hostname for AKS |
+
+---
+
 ## OpenShift (envs/odf) — IDIG 12.1.1.2
 
 The `envs/odf/nonprod/` environment targets OpenShift Container Platform (OCP).

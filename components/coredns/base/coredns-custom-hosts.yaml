@@ -6,7 +6,7 @@ metadata:
 data:
   hosts.override: |
     hosts {
-        20.54.238.192 ai.envoy.eu-de.containers.appdomain.cloud
-        20.54.238.192 idig.envoy.eu-de.containers.appdomain.cloud
+        REPLACE_ME_ENVOY_IP ai.REPLACE_ME_ENDPOINT_DOMAIN
+        REPLACE_ME_ENVOY_IP idig.REPLACE_ME_ENDPOINT_DOMAIN
         fallthrough
     }

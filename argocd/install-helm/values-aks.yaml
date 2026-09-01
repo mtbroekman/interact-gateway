@@ -10,12 +10,12 @@ server:
       nginx.ingress.kubernetes.io/ssl-passthrough: "false"
       nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
       cert-manager.io/cluster-issuer: letsencrypt-prod
-    # AKS cluster: itzaks-nurmlarj (westeurope) — point this hostname DNS to 108.141.49.68
-    hostname: argocd.itzaks-nurmlarj.az.techzone.ibm.com
+    # AKS cluster — replace hostname with your cluster's DNS name
+    hostname: argocd.REPLACE_ME_CLUSTER_SUBDOMAIN
     tls: true
     extraTls:
       - hosts:
-          - argocd.itzaks-nurmlarj.az.techzone.ibm.com
+          - argocd.REPLACE_ME_CLUSTER_SUBDOMAIN
         secretName: argocd-tls
 
 configs:
@@ -25,7 +25,7 @@ configs:
 
   cm:
     # Required for SSO redirect URIs and the UI login link
-    url: https://argocd.itzaks-nurmlarj.az.techzone.ibm.com
+    url: https://argocd.REPLACE_ME_CLUSTER_SUBDOMAIN
 
 repoServer:
   replicas: 1

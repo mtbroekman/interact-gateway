@@ -9,13 +9,13 @@ server:
     annotations:
       nginx.ingress.kubernetes.io/ssl-passthrough: "false"
       nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    # IKS public ingress subdomain for cluster mycluster-eu-de-1-bxf.8x32
-    hostname: argocd.idig-install-cluster-e7d3d93b8b317d269525bf063b24f98d-0000.eu-de.containers.appdomain.cloud
+    # IKS public ingress subdomain — replace with your cluster's subdomain
+    hostname: argocd.REPLACE_ME_CLUSTER_SUBDOMAIN
     tls: true
     extraTls:
       - hosts:
-          - argocd.idig-install-cluster-e7d3d93b8b317d269525bf063b24f98d-0000.eu-de.containers.appdomain.cloud
-        secretName: idig-install-cluster-e7d3d93b8b317d269525bf063b24f98d-0000
+          - argocd.REPLACE_ME_CLUSTER_SUBDOMAIN
+        secretName: REPLACE_ME_CLUSTER_SECRET
 
 configs:
   params:
@@ -24,7 +24,7 @@ configs:
 
   cm:
     # Required for SSO redirect URIs and the UI login link
-    url: https://argocd.idig-install-cluster-e7d3d93b8b317d269525bf063b24f98d-0000.eu-de.containers.appdomain.cloud
+    url: https://argocd.REPLACE_ME_CLUSTER_SUBDOMAIN
 repoServer:
   replicas: 1
 
