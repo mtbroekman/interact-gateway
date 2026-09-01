@@ -17,33 +17,32 @@ https://www.ibm.com/docs/en/api-connect/software/12.1.0?topic=subsystems-install
 
 ## Domain names / placeholders
 
-The following files contain `REPLACE_ME_*` placeholders that must be set before deployment:
+The following files contain `REPLACE_ME_*` placeholders that must be set before deployment.
+Placeholders in `components/` are shared across all environments; those in `argocd/install-helm/` are environment-specific.
 
-| Placeholder | Files | Description |
-|---|---|---|
-| `REPLACE_ME_ENDPOINT_DOMAIN` | `components/idig/base/idig-cluster-dev.yaml` | Base domain for all IDIG endpoints (e.g. `apps.mycluster.example.com` on OCP, Envoy subdomain on IKS/AKS) |
-| `REPLACE_ME_ENDPOINT_DOMAIN` | `components/idig/base/collector-config-patch.yaml` | Analytics ingestion endpoint (`ai.<domain>`) |
-| `REPLACE_ME_ENDPOINT_DOMAIN` | `components/coredns/base/coredns-custom-hosts.yaml` | CoreDNS host overrides — AKS only |
-| `REPLACE_ME_ENVOY_IP` | `components/coredns/base/coredns-custom-hosts.yaml` | Envoy Gateway LoadBalancer IP — AKS only |
-| `REPLACE_ME_CLUSTER_SUBDOMAIN` | `argocd/install-helm/values.yaml` | ArgoCD ingress hostname — IKS |
-| `REPLACE_ME_CLUSTER_SECRET` | `argocd/install-helm/values.yaml` | IKS cluster TLS secret name — IKS |
-| `REPLACE_ME_CLUSTER_SUBDOMAIN` | `argocd/install-helm/values-aks.yaml` | ArgoCD ingress hostname — AKS |
+| Placeholder | File | IKS example | AKS example | OCP example |
+|---|---|---|---|---|
+| `REPLACE_ME_ENDPOINT_DOMAIN` | `components/idig/base/idig-cluster-dev.yaml` | `envoy.mycluster.eu-de.containers.appdomain.cloud` | `envoy.mycluster.westeurope.cloudapp.azure.com` | `apps.mycluster.example.com` |
+| `REPLACE_ME_ENDPOINT_DOMAIN` | `components/idig/base/collector-config-patch.yaml` | same as above | same as above | same as above |
+| `REPLACE_ME_ENDPOINT_DOMAIN` | `components/coredns/base/coredns-custom-hosts.yaml` | — | `envoy.mycluster.westeurope.cloudapp.azure.com` | — |
+| `REPLACE_ME_ENVOY_IP` | `components/coredns/base/coredns-custom-hosts.yaml` | — | `<Envoy Gateway LoadBalancer IP>` | — |
+| `REPLACE_ME_CLUSTER_SUBDOMAIN` | `argocd/install-helm/values.yaml` | `mycluster.eu-de.containers.appdomain.cloud` | — | — |
+| `REPLACE_ME_CLUSTER_SECRET` | `argocd/install-helm/values.yaml` | `<IKS cluster TLS secret name>` | — | — |
+| `REPLACE_ME_CLUSTER_SUBDOMAIN` | `argocd/install-helm/values-aks.yaml` | — | `mycluster.westeurope.cloudapp.azure.com` | — |
 
 ---
 
-## OpenShift (envs/odf) — IDIG 12.1.1.2
+## Environment differences
 
-The `envs/odf/nonprod/` environment targets OpenShift Container Platform (OCP).
-It differs from the Kubernetes (`envs/iks/`) environment in the following ways:
-
-| Concern | Kubernetes (IKS) | OpenShift (ODF) |
-|---|---|---|
-| cert-manager | Jetstack Helm chart (`argocd/operators/cert-manager-operator.yaml`) | OLM Subscription — `cert-manager-operator.yaml` replaced with OLM resources |
-| Ingress / routing | Envoy Gateway (HTTPRoutes) | Native OCP Routes — `envoy-operator` not used |
-| CoreDNS patch | Applied | Not applicable on OCP |
-| Valkey storage | `ibmc-vpc-block-10iops-tier` | `ocs-storagecluster-ceph-rbd` (via `components/valkey/variants/cloudprovider/odf`) |
-| Loki / Tempo storage | `ibmc-vpc-block-10iops-tier` | `ocs-storagecluster-ceph-rbd` |
-| IDIG version | 12.1.1.2 | 12.1.1.2 |
+| Concern | IKS (`envs/iks`) | AKS (`envs/aks`) | OCP (`envs/odf`) |
+|---|---|---|---|
+| cert-manager | Jetstack Helm chart | Jetstack Helm chart | OLM Subscription (`openshift-cert-manager-operator`) |
+| Ingress / routing | Envoy Gateway (HTTPRoutes) | Envoy Gateway (HTTPRoutes) | Native OCP Routes — `envoy-operator` not used |
+| CoreDNS patch | Not used | Applied (`envs/aks/nonprod/coredns`) | Not applicable |
+| Valkey storage | `ibmc-vpc-block-10iops-tier` | `ocs-storagecluster-ceph-rbd` | `ocs-storagecluster-ceph-rbd` |
+| Loki / Tempo storage | `ibmc-vpc-block-10iops-tier` | `ibmc-vpc-block-10iops-tier` | `ocs-storagecluster-ceph-rbd` |
+| Wildcard routes | Not required | Not required | Must enable on `IngressController` (see below) |
+| IDIG version | 12.1.1.2 | 12.1.1.2 | 12.1.1.2 |
 
 ### Manual post-deployment step: enable wildcard routes
 
@@ -63,13 +62,15 @@ See: https://www.ibm.com/docs/en/dp-interact-gateway/12.1.1?topic=openshift-enab
 
 ---
 
-See IBM documentation for OCP-specific installation steps:
+See IBM documentation:
 
+OpenShift:
 - https://www.ibm.com/docs/en/dp-interact-gateway/12.1.1?topic=openshift-installing-prerequisite-components
 - https://www.ibm.com/docs/en/dp-interact-gateway/12.1.1?topic=openshift-installing-operators
 - https://www.ibm.com/docs/en/dp-interact-gateway/12.1.1?topic=openshift-deploying-idig-cluster
 - https://www.ibm.com/docs/en/dp-interact-gateway/12.1.1?topic=openshift-enabling-wildcard-routes-datapower-nanogateway
 
-For Kubernetes installation (envs/iks):
-
+Kubernetes (IKS/AKS):
 - https://www.ibm.com/docs/en/dp-interact-gateway/12.1.1?topic=kubernetes-installing-prerequisite-components
+- https://www.ibm.com/docs/en/dp-interact-gateway/12.1.1?topic=kubernetes-installing-operators
+- https://www.ibm.com/docs/en/dp-interact-gateway/12.1.1?topic=kubernetes-deploying-idig-cluster

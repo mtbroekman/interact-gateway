@@ -6,9 +6,6 @@ spec:
   generators:
   - list:
       elements:
-        - name: coredns
-          namespace: kube-system
-          sync-wave: "100"
         - name: envoy
           namespace: envoy-gateway-system
           sync-wave: "300"
