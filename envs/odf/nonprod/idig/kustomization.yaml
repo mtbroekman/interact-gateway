@@ -3,3 +3,13 @@ kind: Kustomization
 
 resources:
 - ../../../../components/idig/base
+
+patches:
+# On OCP the operator creates OpenShift Routes automatically — no gatewayClassName needed.
+- target:
+    group: datapowerinteractgateway.ibm.com
+    kind: DatapowerInteractGatewayCluster
+    name: idig
+  patch: |-
+    - op: remove
+      path: /spec/nanoGateway/mgmtEndpoint
