@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   annotations:
-    productVersion: 12.1.1.0-1000
+    productVersion: 12.1.1.2-1637
   labels:
     control-plane: ibm-apiconnect
   name: idig
@@ -1028,7 +1028,7 @@ metadata:
     productID: 2c717d4ecc924aa5ac345015b55492eb
     productMetric: FREE
     productName: IBM API Connect Enterprise
-    productVersion: 12.1.1.0-1000
+    productVersion: 12.1.1.2-1637
   name: ibm-apiconnect
   namespace: idig
 spec:
@@ -1049,7 +1049,7 @@ spec:
         productID: 2c717d4ecc924aa5ac345015b55492eb
         productMetric: FREE
         productName: IBM API Connect Enterprise
-        productVersion: 12.1.1.0-1000
+        productVersion: 12.1.1.2-1637
       labels:
         app.kubernetes.io/component: apiconnect-operator
         app.kubernetes.io/instance: ibm-apiconnect
