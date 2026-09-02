@@ -13,3 +13,34 @@ patches:
   patch: |-
     - op: remove
       path: /spec/nanoGateway/mgmtEndpoint
+# Remove envoy gatewayClassName from AnalyticsCluster — OCP uses Routes
+- target:
+    group: analytics.apiconnect.ibm.com
+    kind: AnalyticsCluster
+    name: idig-analytics
+  patch: |-
+    - op: remove
+      path: /spec/ingestion/endpoint/gatewayClassName
+    - op: remove
+      path: /spec/ingestion/endpoint/ingressClassName
+# Remove envoy endpoints from DevPortalCluster and add required version — OCP uses Routes
+- target:
+    group: devportal.apiconnect.ibm.com
+    kind: DevPortalCluster
+    name: idig-devportal
+  patch: |-
+    - op: remove
+      path: /spec/devportalAdminEndpoint
+    - op: remove
+      path: /spec/devportalUIEndpoint
+    - op: add
+      path: /spec/version
+      value: 12.1.1.2
+# Remove envoy mgmtEndpoint from NanoGatewayCluster — OCP uses Routes
+- target:
+    group: nanogateway.apiconnect.ibm.com
+    kind: NanoGatewayCluster
+    name: idig-nanogw
+  patch: |-
+    - op: remove
+      path: /spec/mgmtEndpoint
