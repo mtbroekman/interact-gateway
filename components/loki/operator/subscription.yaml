@@ -5,7 +5,7 @@ metadata:
   # The Loki Operator is installed cluster-wide from openshift-operators
   namespace: openshift-operators
 spec:
-  channel: stable-6.x
+  channel: stable-6.5
   installPlanApproval: Automatic
   name: loki-operator
   source: redhat-operators

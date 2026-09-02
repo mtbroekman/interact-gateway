@@ -10,8 +10,19 @@ spec:
     namespace: monitoring
     server: https://kubernetes.default.svc
   project: default
-  source:
-    path: envs/odf/nonprod/alloy
+  sources:
+    - repoURL: https://grafana.github.io/helm-charts
+      chart: alloy
+      targetRevision: "0.12.5"
+      helm:
+        valueFiles:
+          - $values/components/alloy/base/values.yaml
+    - ref: values
+      repoURL: https://github.com/mtbroekman/interact-gateway.git
+      targetRevision: HEAD
+    - path: ./envs/odf/nonprod/alloy
+      repoURL: https://github.com/mtbroekman/interact-gateway.git
+      targetRevision: HEAD
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

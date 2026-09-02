@@ -6,7 +6,6 @@ resources:
   # OCP-native operator subscriptions (OLM)
   - operators/grafana-operator.yaml
   - operators/loki-operator.yaml
-  - operators/alloy-operator.yaml
   # OCP-native operand Applications
   - operands/grafana.yaml
   - operands/loki.yaml
@@ -154,18 +153,6 @@ patches:
   - target:
       group: argoproj.io
       kind: Application
-      name: alloy-operator
-    patch: |-
-      - op: add
-        path: /spec/source/repoURL
-        value: https://github.com/mtbroekman/interact-gateway.git
-      - op: add
-        path: /spec/source/targetRevision
-        value: HEAD
-
-  - target:
-      group: argoproj.io
-      kind: Application
       name: grafana-ocp
     patch: |-
       - op: add
@@ -179,18 +166,6 @@ patches:
       group: argoproj.io
       kind: Application
       name: loki-ocp
-    patch: |-
-      - op: add
-        path: /spec/source/repoURL
-        value: https://github.com/mtbroekman/interact-gateway.git
-      - op: add
-        path: /spec/source/targetRevision
-        value: HEAD
-
-  - target:
-      group: argoproj.io
-      kind: Application
-      name: alloy-ocp
     patch: |-
       - op: add
         path: /spec/source/repoURL
