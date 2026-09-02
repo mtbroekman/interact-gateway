@@ -1099,7 +1099,7 @@ spec:
           value: "false"
         - name: OPERATOR_MODE
           value: "idig"
-        image: icr.io/idig/ibm-apiconnect-operator@sha256:b83302f355222d757512ac0f524fe51764b9078fedc6c15ce02f08e96714ff14
+        image: icr.io/idig/ibm-apiconnect-operator@sha256:f026e8024f32366a6830040ea48a17547b5d4354302234dfd767be22b0cfce06
         name: ibm-apiconnect
         ports:
         - containerPort: 9443
@@ -1144,7 +1144,7 @@ spec:
           value: "false"
         - name: OPERATOR_MODE
           value: "idig"
-        image: icr.io/idig/ibm-apiconnect-operator@sha256:b83302f355222d757512ac0f524fe51764b9078fedc6c15ce02f08e96714ff14
+        image: icr.io/idig/ibm-apiconnect-operator@sha256:f026e8024f32366a6830040ea48a17547b5d4354302234dfd767be22b0cfce06
         name: webhook
         resources:
           limits:
@@ -1188,7 +1188,7 @@ spec:
           value: "false"
         - name: OPERATOR_MODE
           value: "idig"
-        image: icr.io/idig/ibm-apiconnect-operator@sha256:b83302f355222d757512ac0f524fe51764b9078fedc6c15ce02f08e96714ff14
+        image: icr.io/idig/ibm-apiconnect-operator@sha256:f026e8024f32366a6830040ea48a17547b5d4354302234dfd767be22b0cfce06
         name: webhook-delete
         resources:
           limits:
