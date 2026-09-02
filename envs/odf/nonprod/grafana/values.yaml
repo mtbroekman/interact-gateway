@@ -16,15 +16,9 @@ persistence:
 initChownData:
   enabled: false
 
-# OCP restricted-v2 SCC expects runAsNonRoot; grafana uses 472 — anyuid SCC grant handles it.
+# OCP: grafana SA is granted privileged SCC (see components/ocp-scc/scc-grants.yaml)
+# which allows any UID, fsGroup, and seccomp profile.
 securityContext:
   runAsNonRoot: true
   runAsUser: 472
   fsGroup: 472
-containerSecurityContext:
-  allowPrivilegeEscalation: false
-  capabilities:
-    drop:
-      - ALL
-  seccompProfile:
-    type: RuntimeDefault

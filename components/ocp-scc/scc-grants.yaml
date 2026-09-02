@@ -3,17 +3,18 @@
 # only allows UIDs in the namespace-allocated range.
 
 # -- grafana namespace: grafana SA --
-# Grafana uses runAsUser:472, fsGroup:472, init-container runAsUser:0 (CHOWN)
+# Grafana uses runAsUser:472, fsGroup:472 and injects RuntimeDefault seccomp annotations.
+# anyuid SCC disallows seccomp profiles, so use privileged SCC for the grafana SA.
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: grafana-anyuid-scc
+  name: grafana-privileged-scc
   namespace: grafana
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: system:openshift:scc:anyuid
+  name: system:openshift:scc:privileged
 subjects:
   - kind: ServiceAccount
     name: grafana
