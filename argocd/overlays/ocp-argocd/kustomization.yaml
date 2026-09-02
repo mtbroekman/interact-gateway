@@ -1,0 +1,38 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Inherits all OCP-specific config (operator-based monitoring stack, Route support,
+# ODF storage, gateway-classname patches) but keeps the ArgoCD namespace as "argocd"
+# for clusters where ArgoCD is installed via Helm rather than the OpenShift GitOps OLM operator.
+resources:
+  - ../ocp
+
+patches:
+  # Override the openshift-gitops namespace back to argocd
+  - target:
+      group: argoproj.io
+      kind: Application
+    patch: |-
+      - op: replace
+        path: /metadata/namespace
+        value: argocd
+
+  - target:
+      group: argoproj.io
+      kind: ApplicationSet
+    patch: |-
+      - op: replace
+        path: /metadata/namespace
+        value: argocd
+
+  # Keep the ClusterRoleBinding pointing at argocd-application-controller
+  - target:
+      kind: ClusterRoleBinding
+      name: idig-argo-rb
+    patch: |-
+      - op: replace
+        path: /subjects/0/name
+        value: argocd-application-controller
+      - op: replace
+        path: /subjects/0/namespace
+        value: argocd
