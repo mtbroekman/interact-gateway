@@ -29,6 +29,63 @@ patches:
       metadata:
         name: external-secrets-operator
 
+  # Prometheus is bundled with OCP — skip the community Helm chart
+  - target:
+      group: argoproj.io
+      kind: Application
+      name: prometheus
+    patch: |-
+      $patch: delete
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: prometheus
+
+  # Grafana: switch values paths from envs/iks to envs/odf
+  - target:
+      group: argoproj.io
+      kind: Application
+      name: grafana
+    patch: |-
+      - op: replace
+        path: /spec/sources/0/helm/valueFiles
+        value:
+          - $values/components/grafana/base/values.yaml
+          - $values/envs/odf/nonprod/grafana/values.yaml
+      - op: replace
+        path: /spec/sources/2/path
+        value: ./envs/odf/nonprod/grafana
+
+  # Alloy: switch values path from envs/iks to envs/odf
+  - target:
+      group: argoproj.io
+      kind: Application
+      name: alloy
+    patch: |-
+      - op: replace
+        path: /spec/sources/2/path
+        value: ./envs/odf/nonprod/alloy
+
+  # Loki: use OCP/ODF storage class
+  - target:
+      group: argoproj.io
+      kind: Application
+      name: loki
+    patch: |-
+      - op: replace
+        path: /spec/source/helm/valuesObject/singleBinary/persistence/storageClass
+        value: ocs-storagecluster-ceph-rbd
+
+  # Tempo: use OCP/ODF storage class
+  - target:
+      group: argoproj.io
+      kind: Application
+      name: tempo
+    patch: |-
+      - op: replace
+        path: /spec/source/helm/valuesObject/persistence/storageClassName
+        value: ocs-storagecluster-ceph-rbd
+
   # Point the ApplicationSet to the OCP (odf) env path and remove the envoy operand
   - target:
       group: argoproj.io
