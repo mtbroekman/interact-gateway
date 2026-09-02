@@ -1,3 +1,13 @@
+# Grant anyuid SCC to the default SA in the idig namespace.
+#
+# Required on OCP because the Valkey operator sets podSecurityContext.fsGroup: 1000
+# in the StatefulSet it creates. OCP's default restricted-v2 SCC only allows fsGroup
+# values in the namespace-allocated range — 1000 falls outside it and is rejected.
+#
+# The Valkey StatefulSet uses the 'default' ServiceAccount (no explicit SA is set).
+# anyuid allows any fsGroup/UID, enabling the pod to start.
+#
+# See README.md in this directory for full explanation.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:

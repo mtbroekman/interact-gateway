@@ -3,12 +3,13 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: idig-argo-rb
 # SA name depends on ArgoCD install method:
-#   OpenShift GitOps (OLM): openshift-gitops-argocd-application-controller / namespace: openshift-gitops
-#   Helm install:           argocd-application-controller / namespace: openshift-gitops
+#   Standard Helm install:      argocd-application-controller / namespace: argocd
+#   OpenShift GitOps (OLM):     openshift-gitops-argocd-application-controller / namespace: openshift-gitops
+# The OCP overlay patches this to the OpenShift GitOps SA.
 subjects:
   - kind: ServiceAccount
-    name: openshift-gitops-argocd-application-controller
-    namespace: openshift-gitops
+    name: argocd-application-controller
+    namespace: argocd
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

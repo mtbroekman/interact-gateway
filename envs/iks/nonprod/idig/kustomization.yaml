@@ -3,3 +3,5 @@ kind: Kustomization
 
 resources:
 - ../../../../components/idig/base
+# Apply Envoy Gateway class names to operator-created subsystem CRs (IKS/AKS only)
+- ../../../../components/idig/base/gateway-classname-patches

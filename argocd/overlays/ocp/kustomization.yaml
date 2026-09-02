@@ -5,6 +5,36 @@ resources:
   - ../../base
 
 patches:
+  # OCP uses openshift-gitops namespace (OpenShift GitOps OLM operator).
+  # Base uses "argocd" (standard Helm install). Patch all Applications + ApplicationSet.
+  - target:
+      group: argoproj.io
+      kind: Application
+    patch: |-
+      - op: replace
+        path: /metadata/namespace
+        value: openshift-gitops
+
+  - target:
+      group: argoproj.io
+      kind: ApplicationSet
+    patch: |-
+      - op: replace
+        path: /metadata/namespace
+        value: openshift-gitops
+
+  # OCP uses openshift-gitops SA name (not argocd-application-controller)
+  - target:
+      kind: ClusterRoleBinding
+      name: idig-argo-rb
+    patch: |-
+      - op: replace
+        path: /subjects/0/name
+        value: openshift-gitops-argocd-application-controller
+      - op: replace
+        path: /subjects/0/namespace
+        value: openshift-gitops
+
   # OCP uses native Routes — remove the envoy-operator Application
   - target:
       group: argoproj.io

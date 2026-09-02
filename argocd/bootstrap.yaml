@@ -1,7 +1,10 @@
-# Apply once manually: oc apply -f bootstrap.yaml
-# Set namespace to match your ArgoCD install:
-#   OpenShift GitOps (OLM): openshift-gitops
-#   Helm install:           argocd
+# Apply once manually to bootstrap ArgoCD:
+#   oc apply -f argocd/bootstrap.yaml            (OpenShift — uses openshift-gitops namespace)
+#   kubectl apply -f argocd/bootstrap-iks.yaml   (IKS/AKS  — uses argocd namespace, points at overlays/iks)
+#
+# Set namespace and source path to match your environment:
+#   OpenShift GitOps (OLM): namespace: openshift-gitops, path: ./argocd/overlays/ocp
+#   Helm install (IKS/AKS): namespace: argocd,           path: ./argocd/overlays/iks  (or aks)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
