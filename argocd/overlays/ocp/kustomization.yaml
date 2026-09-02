@@ -67,7 +67,8 @@ patches:
         path: /spec/sources/2/path
         value: ./envs/odf/nonprod/alloy
 
-  # Loki: use OCP/ODF storage class
+  # Loki: use OCP/ODF storage class + fix DNS resolver for nginx gateway
+  # OCP uses CoreDNS at openshift-dns namespace (not kube-dns.kube-system)
   - target:
       group: argoproj.io
       kind: Application
@@ -76,6 +77,11 @@ patches:
       - op: replace
         path: /spec/source/helm/valuesObject/singleBinary/persistence/storageClass
         value: ocs-storagecluster-ceph-rbd
+      - op: add
+        path: /spec/source/helm/valuesObject/global
+        value:
+          dnsService: dns-default
+          dnsNamespace: openshift-dns
 
   # Tempo: use OCP/ODF storage class
   - target:
