@@ -1,0 +1,8 @@
+apiVersion: analytics.apiconnect.ibm.com/v1beta1
+kind: AnalyticsCluster
+metadata:
+  name: idig-analytics
+  namespace: idig
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+spec: {}
