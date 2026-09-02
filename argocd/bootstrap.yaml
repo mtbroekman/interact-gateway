@@ -1,11 +1,15 @@
+# Apply once manually: oc apply -f bootstrap.yaml
+# Set namespace to match your ArgoCD install:
+#   OpenShift GitOps (OLM): openshift-gitops
+#   Helm install:           argocd
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: bootstrap
-  namespace: argocd
+  namespace: openshift-gitops
 spec:
   destination:
-    namespace: argocd
+    namespace: openshift-gitops
     server: https://kubernetes.default.svc
   project: default
   source:

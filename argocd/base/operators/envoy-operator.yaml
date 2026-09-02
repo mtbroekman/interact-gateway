@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: envoy-operator
-  namespace: argocd
+  namespace: openshift-gitops
   labels:
     group: applications
 spec:
