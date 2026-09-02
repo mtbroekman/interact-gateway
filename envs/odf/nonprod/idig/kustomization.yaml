@@ -2,36 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 # On OCP, subsystem CRs (AnalyticsCluster, DevPortalCluster, NanoGatewayCluster) are
-# created and owned by the idig-operator — not managed by ArgoCD.
+# created and owned by the idig-operator — ArgoCD should leave them alone.
+# The CRs are kept in the manifest so ArgoCD does not mark them requiresPruning=true,
+# but all differences are suppressed via ignoreDifferences in the ApplicationSet template.
 resources:
 - ../../../../components/idig/base
-
-patches:
-# Delete the subsystem CRs — operator owns them on OCP
-- target:
-    group: analytics.apiconnect.ibm.com
-    kind: AnalyticsCluster
-  patch: |-
-    $patch: delete
-    apiVersion: analytics.apiconnect.ibm.com/v1beta1
-    kind: AnalyticsCluster
-    metadata:
-      name: idig-analytics
-- target:
-    group: devportal.apiconnect.ibm.com
-    kind: DevPortalCluster
-  patch: |-
-    $patch: delete
-    apiVersion: devportal.apiconnect.ibm.com/v1beta1
-    kind: DevPortalCluster
-    metadata:
-      name: idig-devportal
-- target:
-    group: nanogateway.apiconnect.ibm.com
-    kind: NanoGatewayCluster
-  patch: |-
-    $patch: delete
-    apiVersion: nanogateway.apiconnect.ibm.com/v1beta1
-    kind: NanoGatewayCluster
-    metadata:
-      name: idig-nanogw

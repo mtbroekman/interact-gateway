@@ -30,25 +30,25 @@ spec:
         server: https://kubernetes.default.svc
         namespace: '{{namespace}}'
       ignoreDifferences:
+      # Subsystem CRs are owned by idig-operator — ignore all spec/status/annotation drift
       - group: analytics.apiconnect.ibm.com
         kind: AnalyticsCluster
-        managedFieldsManagers:
-        - manager
         jqPathExpressions:
-        - .metadata.annotations["com.ibm.apiconnect/analytics-upgraded-version"]
-        - .metadata.annotations["argocd.argoproj.io/sync-options"]
-        - .metadata.annotations["argocd.argoproj.io/tracking-id"]
+        - .spec
+        - .status
+        - .metadata.annotations
       - group: devportal.apiconnect.ibm.com
         kind: DevPortalCluster
-        managedFieldsManagers:
-        - manager
         jqPathExpressions:
-        - .metadata.annotations["argocd.argoproj.io/sync-options"]
-        - .metadata.annotations["argocd.argoproj.io/tracking-id"]
+        - .spec
+        - .status
+        - .metadata.annotations
       - group: nanogateway.apiconnect.ibm.com
         kind: NanoGatewayCluster
-        managedFieldsManagers:
-        - manager
+        jqPathExpressions:
+        - .spec
+        - .status
+        - .metadata.annotations
       syncPolicy:
         syncOptions:
           - ServerSideApply=true
