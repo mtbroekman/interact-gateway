@@ -35,7 +35,7 @@ The Ingress controller requires the TLS secret to exist in the same namespace as
 ```bash
 kubectl get secret idig-install-cluster-e7d3d93b8b317d269525bf063b24f98d-0000 \
   -n default -o yaml | \
-  sed 's/namespace: default/namespace: argocd/' | \
+  sed 's/namespace: default/namespace: openshift-gitops/' | \
   kubectl apply -f -
 ```
 
