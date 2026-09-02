@@ -3,6 +3,14 @@ kind: Kustomization
 
 resources:
   - ../../base
+  # OCP-native operator subscriptions (OLM)
+  - operators/grafana-operator.yaml
+  - operators/loki-operator.yaml
+  - operators/alloy-operator.yaml
+  # OCP-native operand Applications
+  - operands/grafana.yaml
+  - operands/loki.yaml
+  - operands/alloy.yaml
 
 patches:
   # OCP uses openshift-gitops namespace (OpenShift GitOps OLM operator).
@@ -59,9 +67,8 @@ patches:
       metadata:
         name: external-secrets-operator
 
-  # Monitoring stack (prometheus, grafana, loki, tempo, alloy) — remove from OCP.
-  # On OCP these should be handled via OCP-native operators (OpenShift Monitoring,
-  # Grafana Operator, Loki Operator), not community Helm charts with SCC issues.
+  # Prometheus and Tempo are still removed — use OpenShift Monitoring for metrics
+  # and add a Tempo Operator subscription separately when needed.
   - target:
       group: argoproj.io
       kind: Application
@@ -73,6 +80,19 @@ patches:
       metadata:
         name: prometheus
 
+  - target:
+      group: argoproj.io
+      kind: Application
+      name: tempo
+    patch: |-
+      $patch: delete
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: tempo
+
+  # Remove the Helm-based grafana, loki, and alloy Applications from the base —
+  # they are replaced above by OCP-native operator versions.
   - target:
       group: argoproj.io
       kind: Application
@@ -98,17 +118,6 @@ patches:
   - target:
       group: argoproj.io
       kind: Application
-      name: tempo
-    patch: |-
-      $patch: delete
-      apiVersion: argoproj.io/v1alpha1
-      kind: Application
-      metadata:
-        name: tempo
-
-  - target:
-      group: argoproj.io
-      kind: Application
       name: alloy
     patch: |-
       $patch: delete
@@ -116,6 +125,79 @@ patches:
       kind: Application
       metadata:
         name: alloy
+
+  # Inject repoURL into all OCP-only Applications (not covered by base patches)
+  - target:
+      group: argoproj.io
+      kind: Application
+      name: grafana-operator
+    patch: |-
+      - op: add
+        path: /spec/source/repoURL
+        value: https://github.com/mtbroekman/interact-gateway.git
+      - op: add
+        path: /spec/source/targetRevision
+        value: HEAD
+
+  - target:
+      group: argoproj.io
+      kind: Application
+      name: loki-operator
+    patch: |-
+      - op: add
+        path: /spec/source/repoURL
+        value: https://github.com/mtbroekman/interact-gateway.git
+      - op: add
+        path: /spec/source/targetRevision
+        value: HEAD
+
+  - target:
+      group: argoproj.io
+      kind: Application
+      name: alloy-operator
+    patch: |-
+      - op: add
+        path: /spec/source/repoURL
+        value: https://github.com/mtbroekman/interact-gateway.git
+      - op: add
+        path: /spec/source/targetRevision
+        value: HEAD
+
+  - target:
+      group: argoproj.io
+      kind: Application
+      name: grafana-ocp
+    patch: |-
+      - op: add
+        path: /spec/source/repoURL
+        value: https://github.com/mtbroekman/interact-gateway.git
+      - op: add
+        path: /spec/source/targetRevision
+        value: HEAD
+
+  - target:
+      group: argoproj.io
+      kind: Application
+      name: loki-ocp
+    patch: |-
+      - op: add
+        path: /spec/source/repoURL
+        value: https://github.com/mtbroekman/interact-gateway.git
+      - op: add
+        path: /spec/source/targetRevision
+        value: HEAD
+
+  - target:
+      group: argoproj.io
+      kind: Application
+      name: alloy-ocp
+    patch: |-
+      - op: add
+        path: /spec/source/repoURL
+        value: https://github.com/mtbroekman/interact-gateway.git
+      - op: add
+        path: /spec/source/targetRevision
+        value: HEAD
 
   # ApplicationSet: point to envs/odf/nonprod, remove envoy operand
   - target:

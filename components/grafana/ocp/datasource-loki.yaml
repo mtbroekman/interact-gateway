@@ -1,0 +1,21 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: loki
+  namespace: grafana
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasource:
+    name: Loki
+    type: loki
+    uid: loki
+    # LokiStack gateway endpoint in the monitoring namespace
+    url: https://lokistack-gateway-http.monitoring.svc.cluster.local:8080/api/logs/v1/application
+    access: proxy
+    jsonData:
+      httpHeaderName1: "X-Scope-OrgID"
+      tlsSkipVerify: true
+    secureJsonData:
+      httpHeaderValue1: "application"

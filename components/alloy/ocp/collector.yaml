@@ -1,0 +1,83 @@
+apiVersion: collectors.grafana.com/v1alpha1
+kind: Collector
+metadata:
+  name: alloy
+  namespace: monitoring
+spec:
+  # Expose OTLP ports so the analytics-collector can reach Alloy
+  service:
+    ports:
+      - name: otlp-grpc
+        port: 4317
+        targetPort: 4317
+        protocol: TCP
+      - name: otlp-http
+        port: 4318
+        targetPort: 4318
+        protocol: TCP
+  config: |
+    logging {
+      level  = "info"
+      format = "logfmt"
+    }
+
+    // ── OTLP receiver ────────────────────────────────────────────────────────
+    otelcol.receiver.otlp "default" {
+      grpc { endpoint = "0.0.0.0:4317" }
+      http { endpoint = "0.0.0.0:4318" }
+
+      output {
+        metrics = [otelcol.exporter.prometheus.default.input]
+        traces  = [otelcol.exporter.otlp.tempo.input]
+        logs    = [otelcol.processor.attributes.loki_labels.input]
+      }
+    }
+
+    // ── Metrics → Prometheus ─────────────────────────────────────────────────
+    otelcol.exporter.prometheus "default" {
+      forward_to = [prometheus.remote_write.default.receiver]
+    }
+
+    prometheus.remote_write "default" {
+      endpoint {
+        url = "http://prometheus-server.monitoring.svc.cluster.local/api/v1/write"
+      }
+    }
+
+    // ── Traces → Tempo ───────────────────────────────────────────────────────
+    otelcol.exporter.otlp "tempo" {
+      client {
+        endpoint = "http://tempo.monitoring.svc.cluster.local:4317"
+        tls { insecure = true }
+      }
+    }
+
+    // ── Logs → Loki (via LokiStack gateway) ─────────────────────────────────
+    // On OCP the Loki Operator exposes logs through an HTTPS gateway.
+    // The gateway requires the X-Scope-OrgID tenant header.
+    otelcol.processor.attributes "loki_labels" {
+      action {
+        key    = "loki.attribute.labels"
+        value  = "service.name, service.namespace, k8s.namespace.name, k8s.pod.name"
+        action = "insert"
+      }
+      output {
+        logs = [otelcol.exporter.loki.default.input]
+      }
+    }
+
+    otelcol.exporter.loki "default" {
+      forward_to = [loki.write.default.receiver]
+    }
+
+    loki.write "default" {
+      endpoint {
+        url = "https://lokistack-gateway-http.monitoring.svc.cluster.local:8080/loki/api/v1/push"
+        headers = {
+          "X-Scope-OrgID" = "application",
+        }
+        tls_config {
+          insecure_skip_verify = true
+        }
+      }
+    }

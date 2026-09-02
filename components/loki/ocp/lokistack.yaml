@@ -1,0 +1,24 @@
+apiVersion: loki.grafana.com/v1
+kind: LokiStack
+metadata:
+  name: lokistack
+  namespace: monitoring
+spec:
+  # 1x.extra-small is the smallest supported size — suitable for nonprod.
+  # Scale to 1x.small or larger for production.
+  size: 1x.extra-small
+  storage:
+    schemas:
+      - version: v13
+        effectiveDate: "2024-01-01"
+    secret:
+      # ODF provisions an ObjectBucketClaim and automatically creates a Secret
+      # with the same name in the same namespace containing AWS_ACCESS_KEY_ID,
+      # AWS_SECRET_ACCESS_KEY, BUCKET_HOST, BUCKET_PORT and BUCKET_NAME.
+      # Create the OBC first (e.g. via the ODF console or oc) and set the
+      # secret name here to match the OBC name.
+      name: lokistack-obc
+      type: s3
+  storageClassName: ocs-storagecluster-ceph-rbd
+  tenants:
+    mode: openshift-logging

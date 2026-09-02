@@ -52,6 +52,33 @@ rules:
     apiGroups: [valkey.datapower.ibm.com]
     resources: ['*']
 
+  # OLM — Subscriptions, OperatorGroups, InstallPlans (used by all OCP operators)
+  - verbs: ['*']
+    apiGroups:
+      - operators.coreos.com
+      - packages.operators.coreos.com
+    resources: ['*']
+
+  # Loki Operator CRs
+  - verbs: ['*']
+    apiGroups: [loki.grafana.com]
+    resources: ['*']
+
+  # Grafana Operator CRs
+  - verbs: ['*']
+    apiGroups: [grafana.integreatly.org]
+    resources: ['*']
+
+  # Grafana Alloy Operator CRs
+  - verbs: ['*']
+    apiGroups: [collectors.grafana.com]
+    resources: ['*']
+
+  # ODF ObjectBucketClaim
+  - verbs: ['*']
+    apiGroups: [objectbucket.io]
+    resources: ['*']
+
   # Policy (PodDisruptionBudgets used by Loki/Grafana)
   - verbs: ['*']
     apiGroups: [policy]

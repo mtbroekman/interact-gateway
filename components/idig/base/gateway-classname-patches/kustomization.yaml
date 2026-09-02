@@ -1,8 +1,27 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-resources:
+patches:
+  - path: analytics-cluster-patch.yaml
+    target:
+      group: analytics.apiconnect.ibm.com
+      version: v1beta1
+      kind: AnalyticsCluster
+      name: idig-analytics
+      namespace: idig
 
-- analytics-cluster-patch.yaml
-- devportal-cluster-patch.yaml
-- nanogw-cluster-patch.yaml
+  - path: devportal-cluster-patch.yaml
+    target:
+      group: devportal.apiconnect.ibm.com
+      version: v1beta1
+      kind: DevPortalCluster
+      name: idig-devportal
+      namespace: idig
+
+  - path: nanogw-cluster-patch.yaml
+    target:
+      group: nanogateway.apiconnect.ibm.com
+      version: v1beta1
+      kind: NanoGatewayCluster
+      name: idig-nanogw
+      namespace: idig
