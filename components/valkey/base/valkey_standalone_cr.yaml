@@ -15,8 +15,11 @@ metadata:
   annotations:
     
 spec:
-  podSecurityContext:
-    fsGroup: 1000
+  # podSecurityContext is intentionally omitted.
+  # On OCP, setting fsGroup: 1000 requires anyuid SCC — unnecessary since the
+  # valkey operator works without it. On IKS/AKS fsGroup: 1000 is fine but also
+  # not required. If a specific fsGroup is needed for a deployment, patch it in
+  # the relevant env overlay.
   kubernetesConfig:
     image: "icr.io/idig/valkey:8.1.4"
     imagePullPolicy: "Always"
