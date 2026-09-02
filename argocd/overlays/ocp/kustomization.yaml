@@ -3,7 +3,6 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - ocp-scc-grants.yaml
 
 patches:
   # OCP uses native Routes — remove the envoy-operator Application
@@ -30,7 +29,9 @@ patches:
       metadata:
         name: external-secrets-operator
 
-  # Prometheus is bundled with OCP — skip the community Helm chart
+  # Monitoring stack (prometheus, grafana, loki, tempo, alloy) — remove from OCP.
+  # On OCP these should be handled via OCP-native operators (OpenShift Monitoring,
+  # Grafana Operator, Loki Operator), not community Helm charts with SCC issues.
   - target:
       group: argoproj.io
       kind: Application
@@ -42,56 +43,49 @@ patches:
       metadata:
         name: prometheus
 
-  # Grafana: switch values paths from envs/iks to envs/odf
   - target:
       group: argoproj.io
       kind: Application
       name: grafana
     patch: |-
-      - op: replace
-        path: /spec/sources/0/helm/valueFiles
-        value:
-          - $values/components/grafana/base/values.yaml
-          - $values/envs/odf/nonprod/grafana/values.yaml
-      - op: replace
-        path: /spec/sources/2/path
-        value: ./envs/odf/nonprod/grafana
-
-  # Alloy: switch values path from envs/iks to envs/odf
-  - target:
-      group: argoproj.io
+      $patch: delete
+      apiVersion: argoproj.io/v1alpha1
       kind: Application
-      name: alloy
-    patch: |-
-      - op: replace
-        path: /spec/sources/2/path
-        value: ./envs/odf/nonprod/alloy
+      metadata:
+        name: grafana
 
-  # Loki: use OCP/ODF storage class + fix DNS resolver for nginx gateway
-  # OCP uses CoreDNS at openshift-dns namespace (not kube-dns.kube-system)
   - target:
       group: argoproj.io
       kind: Application
       name: loki
     patch: |-
-      - op: replace
-        path: /spec/source/helm/valuesObject/singleBinary/persistence/storageClass
-        value: ocs-storagecluster-ceph-rbd
-      - op: add
-        path: /spec/source/helm/valuesObject/global
-        value:
-          dnsService: dns-default
-          dnsNamespace: openshift-dns
+      $patch: delete
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: loki
 
-  # Tempo: use OCP/ODF storage class
   - target:
       group: argoproj.io
       kind: Application
       name: tempo
     patch: |-
-      - op: replace
-        path: /spec/source/helm/valuesObject/persistence/storageClassName
-        value: ocs-storagecluster-ceph-rbd
+      $patch: delete
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: tempo
+
+  - target:
+      group: argoproj.io
+      kind: Application
+      name: alloy
+    patch: |-
+      $patch: delete
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: alloy
 
   # ApplicationSet: point to envs/odf/nonprod, remove envoy operand
   - target:
