@@ -21,7 +21,7 @@ resources:
   - operators/loki.yaml
 
   - operands/all-operands.yaml
- 
+
 
 patches:
 - target:

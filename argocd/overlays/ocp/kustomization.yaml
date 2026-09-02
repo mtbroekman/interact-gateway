@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../../
+  - ../../base
 
 patches:
   # OCP uses native Routes — remove the envoy-operator Application
@@ -17,7 +17,7 @@ patches:
       metadata:
         name: envoy-operator
 
-  # External Secrets Operator is pre-installed on this OCP cluster — skip it
+  # external-secrets-operator is pre-installed on this OCP cluster — skip it
   - target:
       group: argoproj.io
       kind: Application
@@ -86,11 +86,10 @@ patches:
         path: /spec/source/helm/valuesObject/persistence/storageClassName
         value: ocs-storagecluster-ceph-rbd
 
-  # Point the ApplicationSet to the OCP (odf) env path and remove the envoy operand
+  # ApplicationSet: point to envs/odf/nonprod, remove envoy operand
   - target:
       group: argoproj.io
       kind: ApplicationSet
-      name: apic-operands
     patch: |-
       - op: replace
         path: /spec/generators/0/list/elements
