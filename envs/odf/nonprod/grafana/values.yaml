@@ -10,3 +10,21 @@ ingress:
 
 persistence:
   storageClassName: ocs-storagecluster-ceph-rbd
+
+# Disable the init-chown-data container — it requires CHOWN capability which OCP restricts.
+# The grafana SA is granted anyuid SCC, so the data directory permissions are fine.
+initChownData:
+  enabled: false
+
+# OCP restricted-v2 SCC expects runAsNonRoot; grafana uses 472 — anyuid SCC grant handles it.
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 472
+  fsGroup: 472
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  seccompProfile:
+    type: RuntimeDefault
