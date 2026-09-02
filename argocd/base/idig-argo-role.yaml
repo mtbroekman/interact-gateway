@@ -42,6 +42,17 @@ rules:
       - nano.datapower.ibm.com
       - gateway.apiconnect.ibm.com
       - valkey.datapower.ibm.com
+      - datapowerinteractgateway.ibm.com
+    resources: ['*']
+
+  # Valkey
+  - verbs: ['*']
+    apiGroups: [valkey.datapower.ibm.com]
+    resources: ['*']
+
+  # Policy (PodDisruptionBudgets used by Loki/Grafana)
+  - verbs: ['*']
+    apiGroups: [policy]
     resources: ['*']
 
   # Monitoring
