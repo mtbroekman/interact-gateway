@@ -6,6 +6,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-options: ServerSideApply=true
 spec:
+  version: 12.1.1.2
   mgmtEndpoint:
     gatewayClassName: envoy
     ingressClassName: ""

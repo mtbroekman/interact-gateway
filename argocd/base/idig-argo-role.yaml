@@ -43,6 +43,8 @@ rules:
       - gateway.apiconnect.ibm.com
       - valkey.datapower.ibm.com
       - datapowerinteractgateway.ibm.com
+      - analytics.apiconnect.ibm.com
+      - devportal.apiconnect.ibm.com
     resources: ['*']
 
   # Valkey

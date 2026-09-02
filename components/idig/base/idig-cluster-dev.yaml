@@ -19,7 +19,7 @@ spec:
   enableDevPortal: true  # Set to true to enable DevPortal
 
   # The base domain for all endpoints in the platform
-  domain: REPLACE_ME_ENDPOINT_DOMAIN
+  domain: apps.itz-9t6uhd.infra01-lb.fra02.techzone.ibm.com
 
   # Optional: Custom ingress certificate for IDIG Gateway HTTPRoutes (idig-api and idig-web)
   # If not specified, cert-manager will automatically generate certificates using ingress-issuer
