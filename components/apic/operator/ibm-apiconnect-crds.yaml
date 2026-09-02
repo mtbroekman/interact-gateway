@@ -11190,8 +11190,8 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.21.0
-    # CRD schema exceeds 262144-byte annotation limit — use Replace instead of SSA
-    argocd.argoproj.io/sync-options: Replace=true
+    # CRD schema exceeds 262144-byte annotation limit — Replace bypasses annotation storage
+    argocd.argoproj.io/sync-options: ServerSideApply=false,Replace=true
   name: clusters.postgresql.k8s.enterprisedb.io
 spec:
   group: postgresql.k8s.enterprisedb.io
@@ -40860,8 +40860,8 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.21.0
-    # CRD schema exceeds 262144-byte annotation limit — use Replace instead of SSA
-    argocd.argoproj.io/sync-options: Replace=true
+    # CRD schema exceeds 262144-byte annotation limit — Replace bypasses annotation storage
+    argocd.argoproj.io/sync-options: ServerSideApply=false,Replace=true
   name: poolers.postgresql.k8s.enterprisedb.io
 spec:
   group: postgresql.k8s.enterprisedb.io
