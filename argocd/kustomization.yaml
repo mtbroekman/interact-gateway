@@ -12,6 +12,7 @@ resources:
   - operators/nanogw-operator.yaml
   - operators/apic-operator.yaml
   - operators/valkey-operator.yaml
+  - operators/envoy-operator.yaml
   - operators/idig-operator.yaml
   - operators/grafana.yaml
   - operators/alloy.yaml

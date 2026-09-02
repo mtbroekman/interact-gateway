@@ -1,0 +1,37 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../
+
+patches:
+  # OCP uses native Routes — remove the envoy-operator Application
+  - target:
+      group: argoproj.io
+      kind: Application
+      name: envoy-operator
+    patch: |-
+      $patch: delete
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: envoy-operator
+
+  # Point the ApplicationSet to the OCP (odf) env path and remove the envoy operand
+  - target:
+      group: argoproj.io
+      kind: ApplicationSet
+      name: apic-operands
+    patch: |-
+      - op: replace
+        path: /spec/generators/0/list/elements
+        value:
+          - name: valkey
+            namespace: idig
+            sync-wave: "300"
+          - name: idig
+            namespace: idig
+            sync-wave: "300"
+      - op: replace
+        path: /spec/template/spec/source/path
+        value: 'envs/odf/nonprod/{{name}}/'

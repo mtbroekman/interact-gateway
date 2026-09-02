@@ -6,6 +6,9 @@ spec:
   generators:
   - list:
       elements:
+        - name: envoy
+          namespace: envoy-gateway-system
+          sync-wave: "300"
         - name: valkey
           namespace: idig
           sync-wave: "300"
@@ -22,7 +25,7 @@ spec:
     spec:
       project: default
       source:
-        path: 'envs/odf/nonprod/{{name}}/'
+        path: 'envs/iks/nonprod/{{name}}/'
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{namespace}}'
