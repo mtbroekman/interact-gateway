@@ -17,6 +17,18 @@ patches:
       metadata:
         name: envoy-operator
 
+  # External Secrets Operator is pre-installed on this OCP cluster — skip it
+  - target:
+      group: argoproj.io
+      kind: Application
+      name: external-secrets-operator
+    patch: |-
+      $patch: delete
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: external-secrets-operator
+
   # Point the ApplicationSet to the OCP (odf) env path and remove the envoy operand
   - target:
       group: argoproj.io
