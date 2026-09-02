@@ -30,25 +30,22 @@ spec:
         server: https://kubernetes.default.svc
         namespace: '{{namespace}}'
       ignoreDifferences:
-      # Subsystem CRs are owned by idig-operator — ignore all spec/status/annotation drift
+      # Subsystem CRs: ignore status (never managed by ArgoCD) and specific annotations
+      # stamped by the operator after creation. Do NOT ignore .spec — ArgoCD must be
+      # able to enforce desired state (e.g. image overrides via template field).
       - group: analytics.apiconnect.ibm.com
         kind: AnalyticsCluster
         jqPathExpressions:
-        - .spec
         - .status
-        - .metadata.annotations
+        - .metadata.annotations["com.ibm.apiconnect/analytics-upgraded-version"]
       - group: devportal.apiconnect.ibm.com
         kind: DevPortalCluster
         jqPathExpressions:
-        - .spec
         - .status
-        - .metadata.annotations
       - group: nanogateway.apiconnect.ibm.com
         kind: NanoGatewayCluster
         jqPathExpressions:
-        - .spec
         - .status
-        - .metadata.annotations
       syncPolicy:
         syncOptions:
           - ServerSideApply=true
