@@ -24,6 +24,19 @@ spec:
         - /metadata/labels/pod-security.kubernetes.io~1audit-version
         - /metadata/labels/pod-security.kubernetes.io~1warn
         - /metadata/labels/pod-security.kubernetes.io~1warn-version
+    # EDB PostgreSQL CRDs exceed the 262144-byte annotation limit for both SSA and
+    # kubectl apply. Ignore their spec entirely — they are installed once and do not
+    # change between IDIG releases. Re-sync manually if a release upgrades them.
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: clusters.postgresql.k8s.enterprisedb.io
+      jqPathExpressions:
+        - .spec
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: poolers.postgresql.k8s.enterprisedb.io
+      jqPathExpressions:
+        - .spec
   syncPolicy:
     syncOptions:
       - ServerSideApply=true
