@@ -57,6 +57,6 @@ spec:
   # NanoGateway configuration is handled by the profile template
   # To customize NanoGateway settings, patch the NanoGatewayCluster CR after creation
   nanoGateway:
-    gatewayDomain: nanogw.REPLACE_ME_ENDPOINT_DOMAIN
+    gatewayDomain: nanogw.apps.itz-9t6uhd.infra01-lb.fra02.techzone.ibm.com
     mgmtEndpoint:
       gatewayClassName: envoy

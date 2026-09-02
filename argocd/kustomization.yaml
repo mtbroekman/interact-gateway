@@ -31,7 +31,7 @@ patches:
   patch: |-
     - op: add
       path: /spec/source/repoURL
-      value: https://github.com/thomas-mattsson/interact-gateway.git
+      value: https://github.com/mtbroekman/interact-gateway.git
     - op: add
       path: /spec/source/targetRevision
 - target:
@@ -41,12 +41,12 @@ patches:
   patch: |-
     - op: replace
       path: /spec/sources/1/repoURL
-      value: https://github.com/thomas-mattsson/interact-gateway.git
+      value: https://github.com/mtbroekman/interact-gateway.git
     - op: add
       path: /spec/sources/1/targetRevision
     - op: replace
       path: /spec/sources/2/repoURL
-      value: https://github.com/thomas-mattsson/interact-gateway.git
+      value: https://github.com/mtbroekman/interact-gateway.git
     - op: add
       path: /spec/sources/2/targetRevision
 - target:
@@ -56,12 +56,12 @@ patches:
   patch: |-
     - op: replace
       path: /spec/sources/1/repoURL
-      value: https://github.com/thomas-mattsson/interact-gateway.git
+      value: https://github.com/mtbroekman/interact-gateway.git
     - op: add
       path: /spec/sources/1/targetRevision
     - op: replace
       path: /spec/sources/2/repoURL
-      value: https://github.com/thomas-mattsson/interact-gateway.git
+      value: https://github.com/mtbroekman/interact-gateway.git
     - op: add
       path: /spec/sources/2/targetRevision
 - target:
@@ -70,6 +70,6 @@ patches:
   patch: |-
     - op: add
       path: /spec/template/spec/source/repoURL
-      value: https://github.com/thomas-mattsson/interact-gateway.git
+      value: https://github.com/mtbroekman/interact-gateway.git
     - op: add
       path: /spec/template/spec/source/targetRevision

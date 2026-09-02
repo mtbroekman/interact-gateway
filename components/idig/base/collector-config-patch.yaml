@@ -31,7 +31,7 @@ data:
     exporters:
       # exporter for analytics backend
       apicexporter:
-        endpoint: https://ai.REPLACE_ME_ENDPOINT_DOMAIN/x2020/v1/apievent/_bulk
+        endpoint: https://ai.apps.itz-9t6uhd.infra01-lb.fra02.techzone.ibm.com/x2020/v1/apievent/_bulk
         tls:
           ca_file:   /opt/ibm/collector/crypto/exporter/ca.crt
           cert_file: /opt/ibm/collector/crypto/exporter/tls.crt
