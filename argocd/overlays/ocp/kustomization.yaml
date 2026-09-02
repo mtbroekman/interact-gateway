@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - ocp-scc-grants.yaml
 
 patches:
   # OCP uses native Routes — remove the envoy-operator Application
