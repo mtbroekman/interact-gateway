@@ -1,13 +1,13 @@
-apiVersion: analytics.apiconnect.ibm.com/v1beta1
-kind: AnalyticsCluster
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: idig-analytics
+  name: idig-analytics-proxy
   namespace: idig
   annotations:
     argocd.argoproj.io/sync-options: ServerSideApply=true
 spec:
   template:
-  - name: proxy
-    containers:
-    - name: analytics-proxy
-      image: icr.io/idig/analytics-v2-proxy:2026-08-26-11-10-06-v12.1-saas-57338090f3db6e957dfc43301ad1b963abccdc3c
+    spec:
+      containers:
+        - name: analytics-proxy
+          image: icr.io/idig/analytics-v2-proxy:2026-08-26-11-10-06-v12.1-saas-57338090f3db6e957dfc43301ad1b963abccdc3c

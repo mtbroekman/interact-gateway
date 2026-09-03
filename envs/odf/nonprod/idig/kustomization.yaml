@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - ../../../../components/idig/base
   - analytics-cluster.yaml
+  - analytics-proxy-image-patch.yaml

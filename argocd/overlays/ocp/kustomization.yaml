@@ -191,3 +191,18 @@ patches:
       - op: replace
         path: /spec/template/spec/source/path
         value: 'envs/odf/nonprod/{{name}}/'
+      # Ignore all operator-managed fields on idig-analytics-proxy Deployment —
+      # ArgoCD only manages the container image via ServerSideApply field ownership.
+      - op: add
+        path: /spec/template/spec/ignoreDifferences/-
+        value:
+          group: apps
+          kind: Deployment
+          name: idig-analytics-proxy
+          jqPathExpressions:
+            - .spec.template.spec.containers[].resources
+            - .spec.template.spec.containers[].env
+            - .spec.template.spec.containers[].volumeMounts
+            - .spec.template.spec.volumes
+            - .spec.selector
+            - .spec.replicas
