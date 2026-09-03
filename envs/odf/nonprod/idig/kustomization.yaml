@@ -4,12 +4,3 @@ kind: Kustomization
 resources:
   - ../../../../components/idig/base
   - analytics-cluster.yaml
-
-patches:
-  - path: analytics-proxy-image-patch.yaml
-    target:
-      group: analytics.apiconnect.ibm.com
-      version: v1beta1
-      kind: AnalyticsCluster
-      name: idig-analytics
-      namespace: idig

@@ -9,8 +9,14 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: valkey
     app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/component: middleware    
+    app.kubernetes.io/component: middleware
 spec:
+  # ODF/Ceph RBD volumes are mounted with root ownership by default.
+  # fsGroup: 1000 ensures the data directory is group-writable so the
+  # Valkey RDB child process (uid=1001 gid=0) can create temp-*.rdb files.
+  kubernetesConfig:
+    podSecurityContext:
+      fsGroup: 1000
   storage:
     volumeClaimTemplate:
       spec:
