@@ -3,4 +3,6 @@ kind: Kustomization
 
 resources:
   - obc.yaml
+  - secretstore.yaml
+  - external-secret.yaml
   - lokistack.yaml

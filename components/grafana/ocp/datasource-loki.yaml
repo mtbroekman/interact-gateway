@@ -11,5 +11,11 @@ spec:
     name: Loki
     type: loki
     uid: loki
-    url: http://loki-gateway.monitoring.svc.cluster.local
+    # LokiStack gateway — openshift-logging tenant mode
+    url: https://lokistack-gateway-http.monitoring.svc.cluster.local:8080/api/logs/v1/application
     access: proxy
+    jsonData:
+      httpHeaderName1: "X-Scope-OrgID"
+      tlsSkipVerify: true
+    secureJsonData:
+      httpHeaderValue1: "application"
