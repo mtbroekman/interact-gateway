@@ -52,6 +52,15 @@ rules:
     apiGroups: [valkey.datapower.ibm.com]
     resources: ['*']
 
+  # RBAC (Roles/RoleBindings for loki-obc-reader SA) and ServiceAccounts
+  - verbs: ['*']
+    apiGroups: [rbac.authorization.k8s.io]
+    resources: [roles, rolebindings]
+
+  - verbs: ['*']
+    apiGroups: ['']
+    resources: [serviceaccounts, secrets, configmaps]
+
   # OLM — Subscriptions, OperatorGroups, InstallPlans (used by all OCP operators)
   - verbs: ['*']
     apiGroups:

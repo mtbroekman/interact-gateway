@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - obc.yaml
+  - obc-reader-rbac.yaml
   - secretstore.yaml
   - external-secret.yaml
   - lokistack.yaml
