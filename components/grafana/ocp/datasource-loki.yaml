@@ -11,11 +11,5 @@ spec:
     name: Loki
     type: loki
     uid: loki
-    # LokiStack gateway endpoint in the monitoring namespace
-    url: https://lokistack-gateway-http.monitoring.svc.cluster.local:8080/api/logs/v1/application
+    url: http://loki-gateway.monitoring.svc.cluster.local
     access: proxy
-    jsonData:
-      httpHeaderName1: "X-Scope-OrgID"
-      tlsSkipVerify: true
-    secureJsonData:
-      httpHeaderValue1: "application"

@@ -72,12 +72,6 @@ spec:
 
     loki.write "default" {
       endpoint {
-        url = "https://lokistack-gateway-http.monitoring.svc.cluster.local:8080/loki/api/v1/push"
-        headers = {
-          "X-Scope-OrgID" = "application",
-        }
-        tls_config {
-          insecure_skip_verify = true
-        }
+        url = "http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push"
       }
     }
