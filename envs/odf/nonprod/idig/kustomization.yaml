@@ -5,3 +5,10 @@ resources:
   - ../../../../components/idig/base
   - analytics-cluster.yaml
   - analytics-proxy-image-patch.yaml
+
+patches:
+  # OCP: point analytics-collector at alloy-ocp (base uses "alloy" release name)
+  - path: collector-config-patch.yaml
+    target:
+      kind: ConfigMap
+      name: idig-nanogw-collector-config
