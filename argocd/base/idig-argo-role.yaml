@@ -58,10 +58,10 @@ rules:
     apiGroups: ['']
     resources: [serviceaccounts, secrets, configmaps]
 
-  # RBAC — Roles and RoleBindings for bootstrap Jobs
+  # RBAC — Roles, RoleBindings, ClusterRoles, ClusterRoleBindings
   - verbs: ['*']
     apiGroups: [rbac.authorization.k8s.io]
-    resources: [roles, rolebindings]
+    resources: [roles, rolebindings, clusterroles, clusterrolebindings]
 
   # Batch — Jobs for bootstrap tasks
   - verbs: ['*']

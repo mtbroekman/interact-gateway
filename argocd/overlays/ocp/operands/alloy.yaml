@@ -15,8 +15,9 @@ spec:
       chart: alloy
       targetRevision: "0.12.5"
       helm:
+        # OCP values override base values — Loki endpoint points at LokiStack gateway
         valueFiles:
-          - $values/components/alloy/base/values.yaml
+          - $values/components/alloy/ocp/values.yaml
     - ref: values
       repoURL: https://github.com/mtbroekman/interact-gateway.git
       targetRevision: HEAD

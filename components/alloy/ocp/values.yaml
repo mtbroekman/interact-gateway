@@ -1,0 +1,87 @@
+alloy:
+  # OCP-specific Alloy configuration that overrides the base values.yaml.
+  # Differences from base:
+  #   - Loki endpoint points at LokiStack gateway (Operator-managed, HTTPS)
+  #   - Bearer token from the alloy-ocp ServiceAccount is used for Loki auth
+  #     (openshift-logging tenant mode requires RBAC-based access)
+  configMap:
+    content: |
+      logging {
+        level  = "info"
+        format = "logfmt"
+      }
+
+      // ── OTLP receiver ────────────────────────────────────────────────────────
+      otelcol.receiver.otlp "default" {
+        grpc { endpoint = "0.0.0.0:4317" }
+        http { endpoint = "0.0.0.0:4318" }
+
+        output {
+          metrics = [otelcol.exporter.prometheus.default.input]
+          traces  = [otelcol.exporter.otlp.tempo.input]
+          logs    = [otelcol.processor.attributes.loki_labels.input]
+        }
+      }
+
+      // ── Metrics → Prometheus ─────────────────────────────────────────────────
+      otelcol.exporter.prometheus "default" {
+        forward_to = [prometheus.remote_write.default.receiver]
+      }
+
+      prometheus.remote_write "default" {
+        endpoint {
+          url = "http://prometheus-server.monitoring.svc.cluster.local/api/v1/write"
+        }
+      }
+
+      // ── Traces → Tempo ───────────────────────────────────────────────────────
+      otelcol.exporter.otlp "tempo" {
+        client {
+          endpoint = "http://tempo.monitoring.svc.cluster.local:4317"
+          tls { insecure = true }
+        }
+      }
+
+      // ── Logs → LokiStack (OCP) ───────────────────────────────────────────────
+      // LokiStack gateway in openshift-logging mode requires a bearer token
+      // issued for a ServiceAccount that has RBAC write access to logs.
+      // The alloy-ocp SA is bound to ClusterRole lokistack-application-logs-writer
+      // (see components/alloy/ocp/rbac.yaml).
+      otelcol.processor.attributes "loki_labels" {
+        action {
+          key    = "loki.attribute.labels"
+          value  = "service.name, service.namespace, k8s.namespace.name, k8s.pod.name"
+          action = "insert"
+        }
+        output {
+          logs = [otelcol.exporter.loki.default.input]
+        }
+      }
+
+      otelcol.exporter.loki "default" {
+        forward_to = [loki.write.default.receiver]
+      }
+
+      loki.write "default" {
+        endpoint {
+          // LokiStack gateway — HTTPS with service CA cert (skip verify from pod)
+          url = "https://lokistack-gateway-http.monitoring.svc.cluster.local:8080/api/logs/v1/application/loki/api/v1/push"
+
+          bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+          tls_config {
+            insecure_skip_verify = true
+          }
+        }
+      }
+
+  # Expose OTLP ports on the Service so the analytics-collector can reach them
+  extraPorts:
+    - name: otlp-grpc
+      port: 4317
+      targetPort: 4317
+      protocol: TCP
+    - name: otlp-http
+      port: 4318
+      targetPort: 4318
+      protocol: TCP
