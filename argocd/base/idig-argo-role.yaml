@@ -52,6 +52,22 @@ rules:
     apiGroups: [valkey.datapower.ibm.com]
     resources: ['*']
 
+  # ServiceAccounts, Secrets, ConfigMaps
+  # Needed for bootstrap Jobs (e.g. lokistack-secret-bootstrap SA)
+  - verbs: ['*']
+    apiGroups: ['']
+    resources: [serviceaccounts, secrets, configmaps]
+
+  # RBAC — Roles and RoleBindings for bootstrap Jobs
+  - verbs: ['*']
+    apiGroups: [rbac.authorization.k8s.io]
+    resources: [roles, rolebindings]
+
+  # Batch — Jobs for bootstrap tasks
+  - verbs: ['*']
+    apiGroups: [batch]
+    resources: [jobs]
+
   # OLM — Subscriptions, OperatorGroups, InstallPlans (used by all OCP operators)
   - verbs: ['*']
     apiGroups:

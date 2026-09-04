@@ -10,12 +10,15 @@ spec:
       - version: v13
         effectiveDate: "2024-01-01"
     secret:
-      # Assembled by ExternalSecret lokistack-storage-es from the OBC Secret + ConfigMap.
+      # Created by the lokistack-secret-bootstrap Job (see secret-bootstrap-job.yaml)
+      # which reads the OBC Secret+ConfigMap and assembles the required fields.
       name: lokistack-storage-secret
       type: s3
     tls:
-      # NooBaa uses a self-signed certificate — skip verification.
-      caName: ""
+      # NooBaa S3 endpoint cert is signed by the OpenShift service-serving-signer CA,
+      # which is injected into the openshift-service-ca.crt ConfigMap in every namespace.
+      caName: openshift-service-ca.crt
+      caKey: service-ca.crt
   storageClassName: ocs-storagecluster-ceph-rbd
   tenants:
     mode: openshift-logging
