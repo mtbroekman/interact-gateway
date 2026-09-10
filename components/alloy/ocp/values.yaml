@@ -88,17 +88,20 @@ alloy:
       targetPort: 4318
       protocol: TCP
 
+  # Extra volume mounts added to the alloy container only (not the config-reloader).
+  # The long-lived SA token secret is mounted here so bearer_token_file can read it.
+  # The projected SA token (audience: kubernetes.default.svc) is redirected to OpenShift
+  # OAuth by the LokiStack gateway; the legacy kubernetes.io/service-account-token is
+  # accepted via TokenReview and reaches the OPA policy check.
+  mounts:
+    extra:
+      - name: lokistack-token
+        mountPath: /var/run/secrets/lokistack
+        readOnly: true
+
 controller:
-  # Mount the long-lived SA token secret — the projected token (audience:
-  # kubernetes.default.svc) is redirected to OpenShift OAuth by the LokiStack
-  # gateway. The legacy kubernetes.io/service-account-token is accepted via
-  # TokenReview and reaches the OPA policy check.
   volumes:
     extra:
       - name: lokistack-token
         secret:
           secretName: alloy-ocp-sa-token
-  volumeMounts:
-    - name: lokistack-token
-      mountPath: /var/run/secrets/lokistack
-      readOnly: true

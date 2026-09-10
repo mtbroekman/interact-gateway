@@ -1,0 +1,70 @@
+# Bootstrap Job: reads the auto-populated grafana-sa-token SA token secret and
+# creates grafana-loki-bearer-token secret with key "value" = "Bearer <token>".
+# This is used by the GrafanaDatasource valuesFrom field so the LokiStack gateway
+# receives a proper Authorization header without relying on env-var interpolation
+# in secureJsonData (which the Grafana Operator v5 does not perform).
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: grafana-bearer-token-bootstrap
+  namespace: grafana
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: grafana-bearer-token-bootstrap
+  namespace: grafana
+rules:
+  - apiGroups: [""]
+    resources: [secrets]
+    verbs: [get, list, create, update, patch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: grafana-bearer-token-bootstrap
+  namespace: grafana
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: grafana-bearer-token-bootstrap
+subjects:
+  - kind: ServiceAccount
+    name: grafana-bearer-token-bootstrap
+    namespace: grafana
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: grafana-bearer-token-bootstrap
+  namespace: grafana
+  annotations:
+    # Re-run on every ArgoCD sync so the secret stays fresh if the SA token rotates.
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      serviceAccountName: grafana-bearer-token-bootstrap
+      restartPolicy: OnFailure
+      containers:
+        - name: bootstrap
+          image: registry.redhat.io/openshift4/ose-tools-rhel9:latest
+          command:
+            - /bin/bash
+            - -ec
+            - |
+              NS=grafana
+              echo "Reading grafana-sa-token..."
+              TOKEN=$(kubectl get secret grafana-sa-token -n "${NS}" \
+                -o jsonpath='{.data.token}' | base64 -d)
+
+              echo "Creating grafana-loki-bearer-token secret..."
+              kubectl create secret generic grafana-loki-bearer-token \
+                -n "${NS}" \
+                --from-literal=value="Bearer ${TOKEN}" \
+                --dry-run=client -o yaml | kubectl apply -f -
+
+              echo "Done."

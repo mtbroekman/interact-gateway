@@ -7,6 +7,17 @@ spec:
   instanceSelector:
     matchLabels:
       dashboards: grafana
+  # valuesFrom injects the full "Bearer <token>" value into secureJsonData.httpHeaderValue2.
+  # The grafana-loki-bearer-token secret is created by the bearer-token-bootstrap Job
+  # (see bearer-token-bootstrap-job.yaml) which prepends "Bearer " to the SA token.
+  # This is the correct Grafana Operator v5 mechanism — secureJsonData ${ENV_VAR}
+  # interpolation is not performed by this operator.
+  valuesFrom:
+    - targetPath: "secureJsonData.httpHeaderValue2"
+      valueFrom:
+        secretKeyRef:
+          name: grafana-loki-bearer-token
+          key: value
   datasource:
     name: Loki
     type: loki
@@ -20,4 +31,4 @@ spec:
       tlsSkipVerify: true
     secureJsonData:
       httpHeaderValue1: "application"
-      httpHeaderValue2: "Bearer ${LOKI_BEARER_TOKEN}"
+      # httpHeaderValue2 is injected from grafana-loki-bearer-token secret via valuesFrom
