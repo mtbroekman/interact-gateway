@@ -69,13 +69,25 @@ alloy:
 
           tenant_id = "application"
 
-          bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+          bearer_token_file = "/var/run/secrets/lokistack/token"
 
           tls_config {
             insecure_skip_verify = true
           }
         }
       }
+
+  # Mount the long-lived SA token secret — the projected token (kubernetes.default.svc
+  # audience) is not accepted by the LokiStack gateway's OpenShift OAuth proxy.
+  # The legacy-style secret token (kubernetes.io/service-account-token) is accepted.
+  extraVolumes:
+    - name: lokistack-token
+      secret:
+        secretName: alloy-ocp-sa-token
+  extraVolumeMounts:
+    - name: lokistack-token
+      mountPath: /var/run/secrets/lokistack
+      readOnly: true
 
   # Expose OTLP ports on the Service so the analytics-collector can reach them
   extraPorts:
