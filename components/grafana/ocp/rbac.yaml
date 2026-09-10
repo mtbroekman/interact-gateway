@@ -11,6 +11,10 @@ rules:
     resources: [logs]
     resourceNames: [application]
     verbs: [get]
+  - apiGroups: [loki.grafana.com]
+    resources: [application]
+    resourceNames: [logs]
+    verbs: [get]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
