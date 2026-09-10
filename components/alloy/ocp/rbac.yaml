@@ -1,6 +1,7 @@
 # ClusterRole that grants write access to the LokiStack "application" tenant.
 # In openshift-logging mode the LokiStack gateway performs a SubjectAccessReview
-# checking: verb=create, group=loki.grafana.com, resource=logs, subresource=application
+# checking: verb=create, group=loki.grafana.com, resource=logs/application
+# (subresource notation — NOT resourceNames).
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -8,9 +9,8 @@ metadata:
   name: lokistack-application-logs-writer
 rules:
   - apiGroups: [loki.grafana.com]
-    resources: [logs]
-    resourceNames: [application]
-    verbs: [create]
+    resources: [logs, logs/application]
+    verbs: [create, get]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
