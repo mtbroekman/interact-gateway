@@ -12,12 +12,15 @@ spec:
   # (see bearer-token-bootstrap-job.yaml) which prepends "Bearer " to the SA token.
   # This is the correct Grafana Operator v5 mechanism — secureJsonData ${ENV_VAR}
   # interpolation is not performed by this operator.
+  # valuesFrom substitutes ${LOKI_BEARER_TOKEN} placeholders in the datasource spec
+  # with the value from the grafana-loki-bearer-token secret. The key name ("LOKI_BEARER_TOKEN")
+  # must match the ${} placeholder used in secureJsonData below.
   valuesFrom:
     - targetPath: "secureJsonData.httpHeaderValue2"
       valueFrom:
         secretKeyRef:
           name: grafana-loki-bearer-token
-          key: value
+          key: LOKI_BEARER_TOKEN
   datasource:
     name: Loki
     type: loki
@@ -31,4 +34,5 @@ spec:
       tlsSkipVerify: true
     secureJsonData:
       httpHeaderValue1: "application"
-      # httpHeaderValue2 is injected from grafana-loki-bearer-token secret via valuesFrom
+      # ${LOKI_BEARER_TOKEN} is substituted from grafana-loki-bearer-token secret key LOKI_BEARER_TOKEN
+      httpHeaderValue2: "${LOKI_BEARER_TOKEN}"

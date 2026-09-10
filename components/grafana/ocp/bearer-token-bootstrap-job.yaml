@@ -62,9 +62,11 @@ spec:
                 -o jsonpath='{.data.token}' | base64 -d)
 
               echo "Creating grafana-loki-bearer-token secret..."
+              # Key name must match the \${LOKI_BEARER_TOKEN} placeholder in the
+              # GrafanaDatasource valuesFrom spec (grafana operator v5 variable substitution).
               kubectl create secret generic grafana-loki-bearer-token \
                 -n "${NS}" \
-                --from-literal=value="Bearer ${TOKEN}" \
+                --from-literal=LOKI_BEARER_TOKEN="Bearer ${TOKEN}" \
                 --dry-run=client -o yaml | kubectl apply -f -
 
               echo "Done."
