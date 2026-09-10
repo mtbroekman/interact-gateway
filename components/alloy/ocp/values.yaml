@@ -77,18 +77,6 @@ alloy:
         }
       }
 
-  # Mount the long-lived SA token secret — the projected token (kubernetes.default.svc
-  # audience) is not accepted by the LokiStack gateway's OpenShift OAuth proxy.
-  # The legacy-style secret token (kubernetes.io/service-account-token) is accepted.
-  extraVolumes:
-    - name: lokistack-token
-      secret:
-        secretName: alloy-ocp-sa-token
-  extraVolumeMounts:
-    - name: lokistack-token
-      mountPath: /var/run/secrets/lokistack
-      readOnly: true
-
   # Expose OTLP ports on the Service so the analytics-collector can reach them
   extraPorts:
     - name: otlp-grpc
@@ -99,3 +87,18 @@ alloy:
       port: 4318
       targetPort: 4318
       protocol: TCP
+
+controller:
+  # Mount the long-lived SA token secret — the projected token (audience:
+  # kubernetes.default.svc) is redirected to OpenShift OAuth by the LokiStack
+  # gateway. The legacy kubernetes.io/service-account-token is accepted via
+  # TokenReview and reaches the OPA policy check.
+  volumes:
+    extra:
+      - name: lokistack-token
+        secret:
+          secretName: alloy-ocp-sa-token
+  volumeMounts:
+    - name: lokistack-token
+      mountPath: /var/run/secrets/lokistack
+      readOnly: true
