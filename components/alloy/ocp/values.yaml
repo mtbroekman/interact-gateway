@@ -67,6 +67,8 @@ alloy:
           // LokiStack gateway — HTTPS with service CA cert (skip verify from pod)
           url = "https://lokistack-gateway-http.monitoring.svc.cluster.local:8080/api/logs/v1/application/loki/api/v1/push"
 
+          tenant_id = "application"
+
           bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
 
           tls_config {

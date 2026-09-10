@@ -32,6 +32,11 @@ spec:
                     secretKeyRef:
                       name: grafana-admin-secret
                       key: admin-password
+                - name: LOKI_BEARER_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: grafana-sa-token
+                      key: token
   persistentVolumeClaim:
     spec:
       accessModes:
